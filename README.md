@@ -1,8 +1,3 @@
 # orchestra-suncode
 
-the device calls in for the first time
-
-calls the API with its state
-
-the server creates a token and passes it to the device
-
+http://ec2-54-245-75-78.us-west-2.compute.amazonaws.com:8088/graphql
