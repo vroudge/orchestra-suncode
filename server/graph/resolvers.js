@@ -1,6 +1,7 @@
 const Query = {
   plot: async (_, args, { db }) => {
-      return db.get('plot', 'plot')
+    const plot = await db.get('plot', 'plot')
+    return plot.data
   },
   entrypoint: async (_, args, { db }) => {
     return db.get('village', 'entry')
