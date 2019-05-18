@@ -1,4 +1,7 @@
 const Query = {
+  plot: async (_, args, { db }) => {
+      return db.get('plot', 'plot')
+  },
   entrypoint: async (_, args, { db }) => {
     return db.get('village', 'entry')
   },
@@ -42,7 +45,7 @@ const customResolveModels = {
       return Promise.all(
         _.deviceIds.map(async elem => {
           const data = await Query.deviceById(null, { id: elem }, ctx)
-          return { device: {...data, legacy: false} }
+          return { device: { ...data, legacy: false } }
         })
       )
     }

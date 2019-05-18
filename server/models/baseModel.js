@@ -6,7 +6,8 @@ import uuid from 'uuid/v1'
 
 const collections = {
   device: 'devices',
-  village: 'villages'
+  village: 'villages',
+  plot: 'plot'
 }
 
 export class BaseModel {
