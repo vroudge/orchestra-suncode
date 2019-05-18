@@ -1,0 +1,68 @@
+union Device = Consumer | Storage | Producer
+
+type Query {
+	entrypoint: Village
+	villageById(id: ID): Village
+	deviceById(id: ID): Device
+}
+
+type Mutation {
+	#	edit
+	nodeConfigUpdate(input: nodeConfigUpdateInput): Device
+}
+
+input nodeConfigUpdateInput {
+	type: String!
+	in: Int
+	villageId: ID!
+}
+
+type Consumer {
+	id: ID!
+	type: String!
+	in: Int
+	villageId: ID
+	village: Village
+	status: DeviceStatus
+}
+
+type Storage {
+	id: ID!
+	type: String!
+	keeps: Int
+	villageId: ID
+	village: Village
+	status: DeviceStatus
+}
+
+type Producer {
+	id: ID!
+	type: String!
+	out: Int
+	villageId: ID
+	village: Village
+	status: DeviceStatus
+}
+
+type Village {
+	id: ID!
+	name: String
+	villageIds: [ID]
+	deviceConnection: [DeviceEdge]!
+	villageConnection: [VillageEdge]!
+}
+
+type DeviceEdge {
+	device: Device
+}
+
+type VillageEdge {
+	village: Village
+}
+
+enum DeviceStatus {
+	UNKNOWN
+	HEALTHY
+	UNHEALTHY
+	OFF
+}

@@ -1,23 +1,52 @@
-import Koa from 'koa'
-import KoaRouter from 'koa-router'
-import koaCors from '@koa/cors'
-import bodyParser from 'koa-bodyparser'
-import {graphqlHTTP} from './graph'
-const app = new Koa()
-const router = new KoaRouter()
+/*
+ * Copyright (c) 2019. Orchestra-team.
+ */
 
-router.all('graphql', '/graphql', graphqlHTTP)
 
-const start = async () => {
-  app.on('error', (err, ctx) => {
-    console.error(err)
-  })
-}
+import Koa from "koa";
+import KoaRouter from "koa-router";
+import koaCors from "@koa/cors";
+import bodyParser from "koa-bodyparser";
+import { graphqlHTTP } from "./graph/graphql";
+import { BaseModel } from "./models/baseModel";
+import fbadmin from "firebase-admin";
+
+const app = new Koa();
+const router = new KoaRouter();
+const serviceAccount = require("./orchestra-suncode-firebase-adminsdk-mfqkb-83ab056f09");
+fbadmin.initializeApp({
+  credential: fbadmin.credential.cert(serviceAccount),
+  databaseURL: "https://orchestra-suncode.firebaseio.com"
+});
+
+// for the front
+router.all("graphql", "/graphql", graphqlHTTP);
+// for the back
+router.post("/heartbeat", ctx => {
+
+});
+router.post("/config", ctx => {
+
+});
 
 app
+  .use(async (ctx, next) => {
+    ctx.db = new BaseModel(fbadmin);
+    return next();
+  })
   .use(koaCors())
+  .use(bodyParser())
   .use(router.routes())
-  .use(router.allowedMethods({ throw: true }))
+  .use(router.allowedMethods({ throw: true }));
 
-const server = app.listen(8088)
-console.info('Listening on 8088')
+const start = async () => {
+  app.listen(8088);
+  app.on("error", (err, ctx) => {
+    console.error(err);
+  });
+  console.info("Listening on 8088");
+};
+
+(async () => {
+  await start();
+})();

@@ -10,6 +10,12 @@
     "ss": "nodemon babel-node ./server/server.js"
   },
   "dependencies": {
+    "@koa/cors": "^3.0.0",
+    "firebase-admin": "^7.3.0",
+    "graphql": "^14.3.0",
+    "graphql-import": "^0.7.1",
+    "graphql-middleware": "^3.0.2",
+    "graphql-tools": "^4.0.4",
     "apollo-cache-inmemory": "^1.5.1",
     "apollo-client": "^2.5.1",
     "apollo-link-context": "^1.0.17",
@@ -25,12 +31,14 @@
     "vis": "^4.21.0",
     "vue": "^2.6.10",
     "vue-apollo": "^3.0.0-beta.29"
+    "nodemon": "^1.19.0",
+    "uuid": "^3.3.2",
+    "vue": "^2.6.10"
   },
   "devDependencies": {
     "@babel/core": "^7.4.4",
     "@babel/node": "^7.2.2",
     "@babel/preset-env": "^7.4.4",
-    "@koa/cors": "^3.0.0",
     "autoprefixer": "^9.5.1",
     "babel-loader": "^8.0.6",
     "css-loader": "^2.1.1",
