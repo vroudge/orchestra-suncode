@@ -25,15 +25,16 @@ class DER():
                 if self.timer > self.timeout:
                     self.current_state = 0
                     self.timeout = None
-                    
+
                 else:
                     self.step(None, None, None)
 
     def send(self):
         import json
         import urllib3
-        encoded_body = json.dumps(
-            {
+
+        if self.available:
+            return {
                 "id": self.id,
                 "available": self.available,
                 "max_output": self.max_output,
@@ -42,24 +43,43 @@ class DER():
                     "magnitude": self.current_output,
                     "command_timeout": self.timeout
                 }
-            }
-        )
+        else:
+            encoded_body = json.dumps(
+                {
+                    "id": self.id,
+                    "available": self.available,
+                    "max_output": self.max_output,
+                    "max_output_duration": self.max_output_duration,
+                    "current_command": {
+                        "magnitude": self.current_output,
+                        "command_timeout": self.timeout
+                    }
+                }
+            )
 
-        http = urllib3.PoolManager()
+            http = urllib3.PoolManager()
 
-        r = http.request('POST', 'http://ec2-54-245-75-78.us-west-2.compute.amazonaws.com:8088/heartbeat',
-                         headers={'Content-Type': 'application/json'},
-                         body=encoded_body)
-        response = json.loads(r.data)
-        print(response)
-       
-        self.step(response['energized'],
-                  response['magnitude'], response['duration'])
-        return
+            r = http.request('POST', 'http://ec2-54-245-75-78.us-west-2.compute.amazonaws.com:8088/heartbeat',
+                            headers={'Content-Type': 'application/json'},
+                            body=encoded_body)
+            response = json.loads(r.data)
+            print(response)
+
+            self.step(response['energized'],
+                    response['magnitude'], response['duration'])
+            return {
+                "id": self.id,
+                "available": self.available,
+                "max_output": self.max_output,
+                "max_output_duration": self.max_output_duration,
+                "current_command": {
+                    "magnitude": self.current_output,
+                    "command_timeout": self.timeout
+                }
 
 
 class Storage(DER):
-    def __init__(self,id, available, max_output, max_output_duration, state, current_output,
+    def __init__(self, id, available, max_output, max_output_duration, state, current_output,
                  min_capacity, max_capacity):
 
         super().__init__(id, available, max_output,
@@ -69,13 +89,13 @@ class Storage(DER):
 
 
 class PVS(DER):
-    def __init__(self,id, available, max_output, max_output_duration, state, current_output):
+    def __init__(self, id, available, max_output, max_output_duration, state, current_output):
         super().__init__(id, available, max_output, max_output_duration, 1,
                          current_output)
 
 
 class OnOff(DER):
-    def __init__(self,id, available, max_output, max_output_duration, state, current_output):
+    def __init__(self, id, available, max_output, max_output_duration, state, current_output):
         super().__init__(id, available, max_output, max_output_duration, state,
                          current_output)
 
@@ -89,10 +109,10 @@ class EVS(Storage):
 
 
 def main():
-    battery = Storage('1', True, 10, 10, 1,0, 100,100)
-  
+    battery = Storage('1', True, 10, 10, 1, 0, 100, 100)
+
     battery.send()
     battery.available = False
     battery.send()
-if  __name__ == "__main__":
+if __name__ == "__main__":
     main()
