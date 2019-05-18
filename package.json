@@ -5,10 +5,12 @@
   "repository": "git@github.com:vroudge/orchestra-suncode.git",
   "author": "orchestra-group",
   "devDependencies": {
+    "@babel/core": "^7.4.4",
     "@babel/node": "^7.2.2",
     "@babel/preset-env": "^7.4.4",
     "@koa/cors": "^3.0.0",
     "koa": "^2.7.0",
+    "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0"
   }
 }
