@@ -104,6 +104,11 @@ const config = {
         ]
       },
       {
+        test: /\.(graphql|gql)$/,
+        exclude: /node_modules/,
+        loader: 'graphql-tag/loader'
+      },
+      {
         test: /\.(gif|png|jpe?g|svg)$/i,
         loader: 'file-loader',
         options: {
