@@ -25,7 +25,7 @@ class DER():
                 if self.timer > self.timeout:
                     self.current_state = 0
                     self.timeout = None
-                    
+
                 else:
                     self.step(None, None, None)
 
@@ -52,14 +52,14 @@ class DER():
                          body=encoded_body)
         response = json.loads(r.data)
         print(response)
-       
+
         self.step(response['energized'],
                   response['magnitude'], response['duration'])
         return
 
 
 class Storage(DER):
-    def __init__(self,id, available, max_output, max_output_duration, state, current_output,
+    def __init__(self, id, available, max_output, max_output_duration, state, current_output,
                  min_capacity, max_capacity):
 
         super().__init__(id, available, max_output,
@@ -69,13 +69,13 @@ class Storage(DER):
 
 
 class PVS(DER):
-    def __init__(self,id, available, max_output, max_output_duration, state, current_output):
+    def __init__(self, id, available, max_output, max_output_duration, state, current_output):
         super().__init__(id, available, max_output, max_output_duration, 1,
                          current_output)
 
 
 class OnOff(DER):
-    def __init__(self,id, available, max_output, max_output_duration, state, current_output):
+    def __init__(self, id, available, max_output, max_output_duration, state, current_output):
         super().__init__(id, available, max_output, max_output_duration, state,
                          current_output)
 
@@ -89,10 +89,12 @@ class EVS(Storage):
 
 
 def main():
-    battery = Storage('1', True, 10, 10, 1,0, 100,100)
-  
+    battery = Storage('1', True, 10, 10, 1, 0, 100, 100)
+
     battery.send()
     battery.available = False
     battery.send()
-if  __name__ == "__main__":
+
+
+if __name__ == "__main__":
     main()

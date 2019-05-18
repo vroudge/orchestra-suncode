@@ -66,7 +66,7 @@ class Grid():
         # network.generators.at["Gas 0", "p_nom"] = 350
 
     def run(self):
-        self.network.lopf(keep_files=True)
+        self.network.pf()
 
     def plot(self):
         pass
