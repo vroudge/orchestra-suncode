@@ -76,8 +76,7 @@ const config = {
             loader: 'css-loader',
             options: {
               sourceMap: true,
-              importLoaders: 1,
-              minimize: TARGET === 'production'
+              importLoaders: 1
             }
           },
           {
