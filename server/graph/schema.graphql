@@ -1,4 +1,3 @@
-union Device = Consumer | Storage | Producer
 
 type Query {
 	entrypoint: Village
@@ -13,34 +12,13 @@ type Mutation {
 
 input nodeConfigUpdateInput {
 	type: String!
-	in: Int
 	villageId: ID!
 }
 
-type Consumer {
+type Device {
 	id: ID!
 	type: String!
-	in: Int
 	villageId: ID
-	village: Village
-	status: DeviceStatus
-}
-
-type Storage {
-	id: ID!
-	type: String!
-	keeps: Int
-	villageId: ID
-	village: Village
-	status: DeviceStatus
-}
-
-type Producer {
-	id: ID!
-	type: String!
-	out: Int
-	villageId: ID
-	village: Village
 	status: DeviceStatus
 }
 

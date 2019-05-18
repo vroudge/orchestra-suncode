@@ -22,6 +22,6 @@ export const configController = async ctx => {
     villageId: '',
     type: '',
     values: [],
-    commandable: tru
+    commandable: true
   }
 }
