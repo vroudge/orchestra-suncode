@@ -1,4 +1,3 @@
-
 type Query {
 	entrypoint: Village
 	villageById(id: ID): Village
@@ -17,9 +16,33 @@ input nodeConfigUpdateInput {
 
 type Device {
 	id: ID!
+	name: String
 	type: String!
 	villageId: ID
+	legacy: Boolean
+	extractors: [Extractor]
+	inserters: [Inserter]
 	status: DeviceStatus
+	state: DeviceState
+}
+
+type Extractor {
+	extractionRecipe: Int
+	details: String
+}
+
+type Inserter {
+	insertionRecipe: Int
+	details: String
+}
+
+type DeviceState {
+	id: ID
+	available: Boolean
+	minOutput: String
+	maxOutput:String
+	currentCommand: String
+	currentOuput: String
 }
 
 type Village {
