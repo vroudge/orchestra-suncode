@@ -1,22 +1,28 @@
 <template>
-  <div class="wrapper">
-    <div class="derp">Hello motherfucker</div>
-    <div id="mynetwork"></div>
-    <div v-if="Object.keys(currentNode).length > 1" class="node-info">
-      HELLO
-      <br>
-      {{ currentNode.options.title }}
+  <layout>
+    <div class="wrapper">
+      <img src="./assets/interlaced.png" id="lamp" width="30" height="30" style="display: none;">
+      <div class="derp">This is it bois</div>
+      <div id="mynetwork"></div>
+      <node-context :node="currentNode" :config="config" @save="save" />
     </div>
-  </div>
+  </layout>
 </template>
 
 <script>
   import { DataSet, Network } from 'vis'
+  import Layout from './components/Layout.vue'
+  import NodeContext from './components/NodeContext.vue'
   export default {
     name: 'App',
+    components: { Layout, NodeContext },
     data () {
       return {
-        currentNode: {}
+        currentNode: {},
+        config: {
+          location: '',
+          whatever: ''
+        }
       }
     },
     mounted () {
@@ -24,14 +30,14 @@
     },
     methods: {
       draw () {
-        console.log('draw')
-        let that = this
+        console.log('draw');
+        let that = this;
         const nodes = new DataSet([
-          {id: 1, label: 'Mathilde', title: 'Machine learning shit', color: '#ff0000', shape: 'star', font: { color: "#000", strokeWidth: 1, strokeColor: '#fff', margin: 10 }, margin: 10},
-          {id: 2, label: 'Ched', title: 'Data Science', color: '#000000', shape: 'circle', font: { color: "#fff", strokeWidth: 1, strokeColor: '#000000' }, margin: 10},
-          {id: 3, label: 'Valentin', title: 'Back dev', color: '#0000ff', shape: 'box', font: { color: "#fff", strokeWidth: 1, strokeColor: '#000000' }, margin: 10},
-          {id: 4, label: 'Romain', title: 'Front dev', color: '#ffa500', shape: 'hexagon', font: { color: "#000", strokeWidth: 1, strokeColor: '#fff' }, margin: 10},
-          {id: 5, label: 'Brendan', title: 'Engineer', color: '#ffff00', shape: 'triangle', font: { color: "#000", strokeWidth: 1, strokeColor: '#fff' }, margin: 10}
+          {id: 1, label: 'Mathilde', title: 'Machine learning shit', color: '#ff0000', shape: 'star', font: { color: "#000", strokeWidth: 1, strokeColor: '#fff', margin: 10 }, margin: 10, type: 'new'},
+          {id: 2, label: 'Victor', title: 'Team leader', color: '#f801ff', shape: 'circle', font: { color: "#000" }, margin: 10, type: 'new'},
+          {id: 3, label: 'Valentin', title: 'Back dev', color: '#0000ff', shape: 'box', font: { color: "#fff", strokeWidth: 1, strokeColor: '#000' }, margin: 10, type: 'legacy'},
+          {id: 4, label: 'Romain', title: 'Front dev', color: '#ffa500', shape: 'hexagon', font: { color: "#000", strokeWidth: 1, strokeColor: '#fff' }, margin: 10, type: 'new'},
+          {id: 5, label: 'Brendan', title: 'Engineer', color: '#ffff00', shape: 'triangle', font: { color: "#000", strokeWidth: 1, strokeColor: '#fff' }, margin: 10, type: 'new'}
         ]);
 
         // create an array with edges
@@ -55,15 +61,36 @@
         // initialize your network!
         const network = new Network(container, data, options);
 
+        network.on("beforeDrawing",  function(ctx) {
+          //const img = new Image();
+          //img.src = './assets/interlaced.png';
+          const img = document.getElementById("lamp")
+          ctx.save();
+          ctx.setTransform(1, 0, 0, 1, 0, 0);
+          ctx.fillStyle = ctx.createPattern(img, 'repeat');
+          ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+          ctx.restore();
+        });
+
         network.on("selectNode", function(e){
           // functionality for popup to show on mouseover
-          e.event.preventDefault()
+          e.event.preventDefault();
           that.currentNode = this.body.nodes[e.nodes[0]]
         });
 
-        document.querySelector('#mynetwork').addEventListener('click', () => {
-          console.log(this.currentNode)
-        })
+        network.on("deselectNode", function(e){
+          // functionality for popup to show on mouseover
+          e.event.preventDefault();
+          that.currentNode = {};
+          that.config.location = '';
+          that.config.whatever= ''
+        });
+      },
+      save () {
+        console.log('save', this.currentNode, this.config);
+        this.currentNode = {};
+        this.config.location = '';
+        this.config.whatever= ''
       }
     }
   }
@@ -74,27 +101,16 @@
   @import '~vis/dist/vis.min';
   .wrapper {
     height: 100%;
+    padding: 20px;
     .derp {
       font-weight: bold;
       font-size: 20px;
       margin-bottom: 10px;
     }
     #mynetwork {
-      height: 400px;
+      height: 700px;
       padding: 20px;
       z-index: 1;
-    }
-    .node-info {
-      z-index: 2;
-      position: absolute;
-      height: 300px;
-      width: 200px;
-      left:200px;
-      top:20px;
-      padding: 20px;
-      border-radius:20px;
-      border:1px dotted #000;
-      background-color: #fff;
     }
   }
 </style>
