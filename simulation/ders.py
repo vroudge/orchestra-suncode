@@ -43,6 +43,7 @@ class DER():
                     "magnitude": self.current_output,
                     "command_timeout": self.timeout
                 }
+            }
         else:
             encoded_body = json.dumps(
                 {
@@ -60,13 +61,13 @@ class DER():
             http = urllib3.PoolManager()
 
             r = http.request('POST', 'http://ec2-54-245-75-78.us-west-2.compute.amazonaws.com:8088/heartbeat',
-                            headers={'Content-Type': 'application/json'},
-                            body=encoded_body)
+                             headers={'Content-Type': 'application/json'},
+                             body=encoded_body)
             response = json.loads(r.data)
             print(response)
 
             self.step(response['energized'],
-                    response['magnitude'], response['duration'])
+                      response['magnitude'], response['duration'])
             return {
                 "id": self.id,
                 "available": self.available,
@@ -76,6 +77,7 @@ class DER():
                     "magnitude": self.current_output,
                     "command_timeout": self.timeout
                 }
+            }
 
 
 class Storage(DER):
@@ -114,5 +116,7 @@ def main():
     battery.send()
     battery.available = False
     battery.send()
+
+
 if __name__ == "__main__":
     main()
