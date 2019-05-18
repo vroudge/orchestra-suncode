@@ -20,6 +20,12 @@ const Enums = {}
 const Scalars = {}
 
 const customResolveModels = {
+  Device: {
+    state: async (_, args, { db }) => {
+      const res = await db.getLatestStateOfDevice(_.id, 'timestamp', 'desc')
+      return res
+    }
+  },
   Village: {
     villageConnection: async (_, args, ctx) => {
       return Promise.all(
