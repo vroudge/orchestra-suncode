@@ -63,10 +63,7 @@ class Grid():
         return network
 
     def update_network(self, new_loads):
-        self.network.loads_t.p_set = pd.DataFrame(
-            index=self.network.snapshots,
-            columns=self.network.loads.index,
-            data=new_loads)
+        # network.generators.at["Gas 0", "p_nom"] = 350
 
     def run(self):
         self.network.lopf(keep_files=True)
