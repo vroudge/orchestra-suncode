@@ -19,8 +19,21 @@ type Device {
 	name: String
 	type: String!
 	villageId: ID
+	legacy: Boolean
+	extractors: [Extractor]
+	inserters: [Inserter]
 	status: DeviceStatus
 	state: DeviceState
+}
+
+type Extractor {
+	extractionRecipe: Int
+	details: String
+}
+
+type Inserter {
+	insertionRecipe: Int
+	details: String
 }
 
 type DeviceState {
