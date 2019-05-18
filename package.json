@@ -12,10 +12,7 @@
   "dependencies": {
     "@koa/cors": "^3.0.0",
     "firebase-admin": "^7.3.0",
-    "graphql": "^14.3.0",
     "graphql-import": "^0.7.1",
-    "graphql-middleware": "^3.0.2",
-    "graphql-tools": "^4.0.4",
     "apollo-cache-inmemory": "^1.5.1",
     "apollo-client": "^2.5.1",
     "apollo-link-context": "^1.0.17",
@@ -29,8 +26,7 @@
     "koa-router": "^7.4.0",
     "moment": "^2.24.0",
     "vis": "^4.21.0",
-    "vue": "^2.6.10",
-    "vue-apollo": "^3.0.0-beta.29"
+    "vue-apollo": "^3.0.0-beta.29",
     "nodemon": "^1.19.0",
     "uuid": "^3.3.2",
     "vue": "^2.6.10"
