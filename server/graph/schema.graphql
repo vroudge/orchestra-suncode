@@ -17,6 +17,7 @@ input nodeConfigUpdateInput {
 
 type Device {
 	id: ID!
+	name: String
 	type: String!
 	villageId: ID
 	status: DeviceStatus

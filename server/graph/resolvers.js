@@ -9,9 +9,13 @@ const Query = {
     return db.get('village', args.id)
   }
 }
+
 const Mutation = {
-  nodeConfigUpdate: async () => {}
+  nodeConfigUpdate: async (_, args, { db }) => {
+
+  }
 }
+
 const Enums = {}
 const Scalars = {}
 
@@ -26,13 +30,12 @@ const customResolveModels = {
       )
     },
     deviceConnection: async (_, args, ctx) => {
-      const kek = await Promise.all(
+      return Promise.all(
         _.deviceIds.map(async elem => {
           const data = await Query.deviceById(null, { id: elem }, ctx)
           return { device: data }
         })
       )
-      return kek
     }
   }
 }
