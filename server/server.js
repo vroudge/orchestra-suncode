@@ -11,6 +11,7 @@ import { BaseModel } from "./models/baseModel";
 import fbadmin from "firebase-admin";
 import { heartbeatController } from "./controllers/heartbeat";
 import { configController } from './controllers/config'
+import { plotController } from './controllers/plot'
 
 const app = new Koa();
 const router = new KoaRouter();
@@ -25,6 +26,7 @@ router.all("graphql", "/graphql", graphqlHTTP);
 // for the back
 router.post("/heartbeat", heartbeatController);
 router.post("/config", configController);
+router.post("/plot", plotController);
 
 app
   .use(async (ctx, next) => {

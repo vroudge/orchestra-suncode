@@ -1,4 +1,5 @@
 type Query {
+	plot: String
 	entrypoint: Village
 	villageById(id: ID): Village
 	deviceById(id: ID): Device
@@ -10,8 +11,9 @@ type Mutation {
 }
 
 input nodeConfigUpdateInput {
-	type: String!
-	villageId: ID!
+	extractionRecipe: Int
+	insertionRecipe: Int
+	deviceId: ID!
 }
 
 type Device {

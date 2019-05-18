@@ -1,4 +1,8 @@
 const Query = {
+  plot: async (_, args, { db }) => {
+    const plot = await db.get('plot', 'plot')
+    return plot.data
+  },
   entrypoint: async (_, args, { db }) => {
     return db.get('village', 'entry')
   },
@@ -11,8 +15,11 @@ const Query = {
 }
 
 const Mutation = {
-  nodeConfigUpdate: async (_, args, { db }) => {
-
+  nodeConfigUpdate: async (_, { input }, { db }) => {
+    const updated = await db.update('device', input.deviceId, {
+      ...input
+    })
+    return db.get('device', input.deviceId)
   }
 }
 
@@ -39,7 +46,7 @@ const customResolveModels = {
       return Promise.all(
         _.deviceIds.map(async elem => {
           const data = await Query.deviceById(null, { id: elem }, ctx)
-          return { device: data }
+          return { device: { ...data, legacy: false } }
         })
       )
     }
