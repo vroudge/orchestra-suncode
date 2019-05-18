@@ -22,6 +22,7 @@ class DER():
         else:
             if self.timeout:
                 self.timer += 1
+                print(self.timer)
                 if self.timer > self.timeout:
                     self.current_state = 0
                     self.timeout = None
@@ -33,7 +34,8 @@ class DER():
         import json
         import urllib3
 
-        if self.available:
+        if not(self.available):
+            self.step(None,None,None)
             return {
                 "id": self.id,
                 "available": self.available,
@@ -113,9 +115,11 @@ class EVS(Storage):
 def main():
     battery = Storage('1', True, 10, 10, 1, 0, 100, 100)
 
-    battery.send()
+    c = battery.send()
+    print(c)
     battery.available = False
-    battery.send()
+    c = battery.send()
+    print(c)
 
 
 if __name__ == "__main__":
