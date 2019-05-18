@@ -2,7 +2,6 @@ import pypsa
 import pandas as pd
 import numpy as np
 import logging
-import urllib.parse
 import urllib.request
 import time
 import argparse
@@ -46,7 +45,7 @@ def create_and_save_network(network_path):
 
     network.add("Load", "load",
                 bus="bus_2",
-                p_set=100)
+                p_set=60)
 
     network.export_to_csv_folder(network_path)
 
@@ -63,7 +62,7 @@ class Grid():
         network.import_from_csv_folder(self.network_path)
         return network
 
-    def update_network(self, new_loads, timestamp):
+    def update_network(self, new_loads):
         self.network.loads_t.p_set = pd.DataFrame(
             index=self.network.snapshots,
             columns=self.network.loads.index,
@@ -89,25 +88,15 @@ class Simulation():
         url = 'http://127.0.0.1:8888/stats'
         headers = {'content-type': 'application/json'}
         req = urllib.request.Request(url,
-                                     json.dumps(data).encode('utf-8'), headers)
+                                     'query {node {id}}', headers)
         try:
             with urllib.request.urlopen(req) as response:
                 data = json.loads(response.read())
                 self.grid.update_network(
-                    data.get('loads'), data.get('timestamp'))
+                    data.get('loads'))
         except:
             pass
 
     def run_simulation(self):
         data = self.grid.run()
         self.send_data(data)
-
-
-def main():
-    parser = argparse.ArgumentParser()
-    args = parser.parse_args()
-    simulation = Simulation()
-
-
-if __name__ == '__main__':
-    main()
