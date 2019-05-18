@@ -5,7 +5,6 @@
 export const heartbeatController = async ctx => {
   const { body } = ctx.request
   ctx.assert(body.id, 400, 'NO_ID_PROVIDED')
-  ctx.assert(body.available, 400, 'NO_AVAILABILITY_PROVIDED')
   /*
   {
     "available": true,
