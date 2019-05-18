@@ -4,7 +4,11 @@
   "main": "index.js",
   "repository": "git@github.com:vroudge/orchestra-suncode.git",
   "author": "orchestra-group",
-  "dependencies": {
-    "@babel/preset-env": "^7.4.4"
+  "devDependencies": {
+    "@babel/node": "^7.2.2",
+    "@babel/preset-env": "^7.4.4",
+    "@koa/cors": "^3.0.0",
+    "koa": "^2.7.0",
+    "koa-router": "^7.4.0"
   }
 }
