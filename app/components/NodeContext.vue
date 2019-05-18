@@ -1,8 +1,19 @@
 <template>
   <div :class="`node-info ${isActive ? 'active' : ''}`">
     <div v-if="isActive">
-      <h3>Title:</h3>
-      {{ node.options.title }}
+      <h3>Name:</h3>
+      {{ node.options.label }}
+      <div v-if="node.options.type === 'device'">
+        <h3>Status:</h3>
+        <div :style="`font-weight: bold; color: ${color}`">{{ node.options.title }}</div>
+      </div>
+      <div v-else>
+        <h3>Childrens:</h3>
+        <div class="childrens" v-for="child in children">
+          <h4>- {{child.label}}</h4>
+          <div v-if="child.type !== 'village'" :style="`font-weight: bold; color: ${statusColor(child.status)}`">Status: {{child.status}}</div>
+        </div>
+      </div>
       <div v-if="node.options.type === 'legacy'" class="form-setup">
         <h3>Setup:</h3>
         <div>
@@ -37,6 +48,14 @@
       node: {
         default: {},
         type: Object
+      },
+      color: {
+        default: '#000',
+        type: String
+      },
+      children: {
+        default: () => [],
+        type: Array
       }
     },
     computed: {
@@ -45,6 +64,18 @@
       }
     },
     methods: {
+      statusColor (status) {
+        switch(status) {
+          case 'UNKNOWN':
+            return '#999999';
+          case 'UNHEALTHY':
+            return '#ff4847';
+          case 'OFF':
+            return '#ff8900';
+          default:
+            return '#b1ffa4';
+        }
+      },
       save () {
         this.$emit('save')
       }
@@ -56,7 +87,6 @@
   .node-info {
     z-index: 2;
     position: absolute;
-    height: 300px;
     width: 200px;
     left:-500px;
     top: 80px;
@@ -67,10 +97,16 @@
     background-color: #fff;
     transition: left 0.4s ease-out;
     h3 {
-      margin: 0;
+      margin: 10px 0 0 0;
+    }
+    h4 {
+      margin: 10px 0 0 0;
     }
     &.active{
       left:20px;
+    }
+    .childrens {
+      padding-left: 10px;
     }
     .form-setup {
       display: flex;

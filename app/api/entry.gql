@@ -2,13 +2,47 @@ query {
   entrypoint {
     id
     name
+    villageIds
+    deviceConnection {
+      device {
+        id
+        type
+        status
+        name
+      }
+    }
     villageConnection {
-      village{
+      village {
         id
         name
+        villageIds
         villageConnection {
           village {
             id
+            name
+            villageIds
+            villageConnection {
+              village {
+                id
+                name
+                villageIds
+              }
+            }
+            deviceConnection {
+              device {
+                id
+                type
+                status
+                name
+              }
+            }
+          }
+        }
+        deviceConnection {
+          device {
+            id
+            type
+            status
             name
           }
         }
