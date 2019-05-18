@@ -1,0 +1,18 @@
+query {
+  entrypoint {
+    id
+    name
+    villageConnection {
+      village{
+        id
+        name
+        villageConnection {
+          village {
+            id
+            name
+          }
+        }
+      }
+    }
+  }
+}
