@@ -35,9 +35,15 @@
           location: '',
           whatever: ''
         },
+        chart: {},
         entry: {},
         edges: [],
         nodes: []
+      }
+    },
+    computed : {
+      totalChart () {
+        return this.chart.total
       }
     },
     apollo: {
@@ -92,7 +98,7 @@
             current.deviceConnection.forEach(elem => {
               stack.push(elem.device);
               if (!nodes.find(node => node.id === elem.device.id)) {
-                nodes.push({type: 'device', id: elem.device.id, label: elem.device.name, title: elem.device.status, shape: 'box', color: this.statusColor(elem.device.status), status: elem.device.status, ...node });
+                nodes.push({type: 'device', id: elem.device.id, label: elem.device.name, title: elem.device.status, shape: elem.device.legacy ? 'triangle' : 'box', color: this.statusColor(elem.device.status), status: elem.device.status, state: elem.device.state, ...node });
               }
               edges.push({ from: current.id, to: elem.device.id })
             })
@@ -135,8 +141,8 @@
           that.config.location = '';
           that.config.whatever= ''
         });
-        this.nodes = nodes
-        this.edges = edges
+        this.nodes = nodes;
+        this.edges = edges;
       },
       statusColor (status) {
         switch(status) {
@@ -165,6 +171,19 @@
           return this.getEdges(id).map(item => this.getNode(item.to))
         }
         return []
+      },
+      getChart() {
+        this.chart = {
+          'total': {
+            '1': {
+              'x': '1',
+              'y': '2'
+            }
+          }
+        }
+      },
+      getNodeChart(id) {
+        return {}
       },
       save () {
         // console.log('save', this.currentNode, this.config);

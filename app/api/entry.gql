@@ -9,6 +9,12 @@ query {
         type
         status
         name
+        legacy
+        state {
+          minOutput
+          maxOutput
+          currentOuput
+        }
       }
     }
     villageConnection {
@@ -34,6 +40,12 @@ query {
                 type
                 status
                 name
+                legacy
+                state {
+                  minOutput
+                  maxOutput
+                  currentOuput
+                }
               }
             }
           }
@@ -44,6 +56,12 @@ query {
             type
             status
             name
+            legacy
+            state {
+              minOutput
+              maxOutput
+              currentOuput
+            }
           }
         }
       }
