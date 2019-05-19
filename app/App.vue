@@ -71,7 +71,7 @@
           // countModifier is either 1 or -1
           this.isLoading = isLoading
         },
-        pollInterval: 10000
+        pollInterval: 20000
       },
       chart: {
         query: plot,
@@ -94,7 +94,7 @@
           // countModifier is either 1 or -1
           this.isLoading = isLoading
         },
-        pollInterval: 2000
+        pollInterval: 10000
       }
     },
     methods: {
