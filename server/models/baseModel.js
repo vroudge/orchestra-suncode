@@ -3,7 +3,7 @@
  */
 
 import uuid from 'uuid/v1'
-
+import _ from 'lodash'
 const collections = {
   device: 'devices',
   village: 'villages',
@@ -58,7 +58,7 @@ export class BaseModel {
     await this.db
       .collection(collections[name])
       .doc(id)
-      .set(data)
+      .set(_.pick(data))
   }
 
   async createInCollection (
@@ -68,11 +68,12 @@ export class BaseModel {
     overrideId,
     overrideSubId
   ) {
+    console.info(data)
     const id = overrideId || uuid()
     const subId = overrideSubId || uuid()
     await this.db
       .collection(`${collections[collectionName]}/${id}/state`)
       .doc(subId.toString())
-      .set(data)
+      .set(_.pick(data))
   }
 }

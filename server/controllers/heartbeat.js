@@ -9,7 +9,8 @@ export const heartbeatController = async ctx => {
   const doc = await ctx.db.get('device', body.id.toString())
   const now = Date.now()
 
-  body.state = {
+  const bod = {
+    ...body,
     currentCommand: body.state.current_command,
     maxOutput: body.state.max_output,
     currentOutput: body.state.current_output,
@@ -20,7 +21,7 @@ export const heartbeatController = async ctx => {
   await ctx.db.createInCollection(
     doc,
     'device',
-    { ...body, timestamp: now },
+    { ...bod, timestamp: now },
     body.id,
     now
   )
