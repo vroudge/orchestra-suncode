@@ -1,0 +1,70 @@
+query {
+  entrypoint {
+    id
+    name
+    villageIds
+    deviceConnection {
+      device {
+        id
+        type
+        status
+        name
+        legacy
+        state {
+          minOutput
+          maxOutput
+          currentOuput
+        }
+      }
+    }
+    villageConnection {
+      village {
+        id
+        name
+        villageIds
+        villageConnection {
+          village {
+            id
+            name
+            villageIds
+            villageConnection {
+              village {
+                id
+                name
+                villageIds
+              }
+            }
+            deviceConnection {
+              device {
+                id
+                type
+                status
+                name
+                legacy
+                state {
+                  minOutput
+                  maxOutput
+                  currentOuput
+                }
+              }
+            }
+          }
+        }
+        deviceConnection {
+          device {
+            id
+            type
+            status
+            name
+            legacy
+            state {
+              minOutput
+              maxOutput
+              currentOuput
+            }
+          }
+        }
+      }
+    }
+  }
+}
