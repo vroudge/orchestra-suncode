@@ -21,16 +21,19 @@ class Simulation():
 
     def run_simulation(self):
         power = [10] * 30
+        power_spe = [10] * 30
+        power_spe[10] = 0
         power[10] = 10/9 + 10
         available = [True] * 30
         available[10] = False
         for t in range(30):
             total_list = 0
-            self.list_ders[0].step(available[t], power[t])
+            self.list_ders[0].step(available[t], power_spe[t])
             total_list += self.list_ders[0].current_output
             for der in self.list_ders[1:]:
                 der.step(True, power[t])
                 total_list += der.current_output
+            print()
             self.total_list.append(total_list)
             self.send_to_visu()
 
@@ -51,4 +54,5 @@ class Simulation():
 
 if __name__ == "__main__":
     simu = Simulation()
-    simu.run_simulation()
+    while True:
+        simu.run_simulation()
