@@ -104,6 +104,11 @@ const config = {
         ]
       },
       {
+        test: /\.json$/,
+        type: 'javascript/auto',
+        loader: 'json-loader'
+      },
+      {
         test: /\.(graphql|gql)$/,
         exclude: /node_modules/,
         loader: 'graphql-tag/loader'

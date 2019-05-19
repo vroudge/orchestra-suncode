@@ -5,6 +5,7 @@ import { HttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { setContext } from 'apollo-link-context'
 
+console.log(API_URL)
 const httpLink = new HttpLink({
   // You should use an absolute URL here
   uri: `${API_URL}/graphql`
