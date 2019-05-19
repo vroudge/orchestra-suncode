@@ -8,7 +8,7 @@ export const heartbeatController = async ctx => {
   //get a document
   const doc = await ctx.db.get('device', body.id.toString())
   const now = Date.now()
-  if (body.state.current_command) {
+  if (body.state.current_command && body.state.max_output) {
     body.state = {
       currentCommand: body.state.current_command,
       maxOutput: body.state.max_output,
