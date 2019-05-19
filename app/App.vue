@@ -69,9 +69,9 @@
         loadingKey: 'loadingQueriesCount',
         watchLoading (isLoading, countModifier) {
           // countModifier is either 1 or -1
-          console.log(isLoading)
           this.isLoading = isLoading
         },
+        pollInterval: 10000
       },
       chart: {
         query: plot,
@@ -92,14 +92,13 @@
         loadingKey: 'loadingQueriesCount',
         watchLoading (isLoading, countModifier) {
           // countModifier is either 1 or -1
-          console.log(isLoading)
           this.isLoading = isLoading
-        }
+        },
+        pollInterval: 2000
       }
     },
     methods: {
       draw (graph) {
-        console.log('draw');
         const node = { font: { color: "#000" }, margin: 10 };
         const nodes = [];
         const edges = [];
@@ -200,9 +199,18 @@
       },
       getChart(data) {
         this.chart = JSON.parse(data.plot)
-        console.log(this.totalChart)
         setTimeout(() => {
           var ctx = document.getElementById('myChart');
+          const options = {
+            scales: {
+              yAxes: [{
+                ticks: {
+                  beginAtZero: true,
+                  min: 0
+                }
+              }]
+            }
+          };
           var mychart = new Chart(ctx, {
             type: 'line',
             data: {
@@ -211,7 +219,8 @@
                 backgroundColor: 'rgba(255,61,197,0.5)',
                 data:this.totalChart
               }]
-            }
+            },
+            options: options
           });
         }, 2000)
       },
