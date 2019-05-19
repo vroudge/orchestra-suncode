@@ -68,6 +68,7 @@ export class BaseModel {
     overrideId,
     overrideSubId
   ) {
+    console.info(data)
     const id = overrideId || uuid()
     const subId = overrideSubId || uuid()
     await this.db
