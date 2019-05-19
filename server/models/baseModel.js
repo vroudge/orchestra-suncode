@@ -3,7 +3,7 @@
  */
 
 import uuid from 'uuid/v1'
-import lodash from 'lodash'
+import _ from 'lodash'
 const collections = {
   device: 'devices',
   village: 'villages',
