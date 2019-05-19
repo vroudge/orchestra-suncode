@@ -7,18 +7,21 @@
         <div id="mynetwork"></div>
         <node-context :node="currentNode" :config="config" @save="save" :color="statusColor(currentNode.options.status)" :children="getChildren(currentNode.options.id)" />
       </div>
+      <canvas v-if="Object.keys(this.chart).length > 1" id="myChart" width="400" height="400"></canvas>
       <lottie v-show="isLoading" :options="defaultOptions" :height="400" :width="400" />
     </div>
   </layout>
 </template>
 
 <script>
+  import chart from 'chart.js'
   import lottie from 'vue-lottie'
   import * as animationData from './data.json';
   import { Network } from 'vis'
   import Layout from './components/Layout.vue'
   import NodeContext from './components/NodeContext.vue'
   import entry from './api/entry.gql'
+  import plot from './api/plot.gql'
   export default {
     name: 'App',
     components: { Layout, NodeContext, lottie },
@@ -43,7 +46,7 @@
     },
     computed : {
       totalChart () {
-        return this.chart.total
+        return Object.keys(this.chart.total).map(item => this.chart.total[item])
       }
     },
     apollo: {
@@ -70,6 +73,29 @@
           this.isLoading = isLoading
         },
       },
+      chart: {
+        query: plot,
+        deep: false,
+        update (data) {
+          //console.log('Update', data);
+          return data;
+        },
+        result ({ data, loading, networkStatus }) {
+          //console.log('Result', data);
+          if(data) {
+            this.getChart(data)
+          }
+        },
+        error (error) {
+          console.error('We\'ve got an error!', error);
+        },
+        loadingKey: 'loadingQueriesCount',
+        watchLoading (isLoading, countModifier) {
+          // countModifier is either 1 or -1
+          console.log(isLoading)
+          this.isLoading = isLoading
+        }
+      }
     },
     methods: {
       draw (graph) {
@@ -172,15 +198,22 @@
         }
         return []
       },
-      getChart() {
-        this.chart = {
-          'total': {
-            '1': {
-              'x': '1',
-              'y': '2'
+      getChart(data) {
+        this.chart = JSON.parse(data.plot)
+        console.log(this.totalChart)
+        setTimeout(() => {
+          var ctx = document.getElementById('myChart');
+          var mychart = new Chart(ctx, {
+            type: 'line',
+            data: {
+              datasets: [{
+                label: 'Total energy output',
+                backgroundColor: 'rgba(255,61,197,0.5)',
+                data:this.totalChart
+              }]
             }
-          }
-        }
+          });
+        }, 2000)
       },
       getNodeChart(id) {
         return {}
