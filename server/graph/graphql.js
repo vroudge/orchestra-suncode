@@ -1,9 +1,12 @@
+/*
+ * Copyright (c) 2019. Orchestra-team.
+ */
+
 import koaGraphQL from 'koa-graphql'
-import { applyMiddleware } from 'graphql-middleware'
 import { makeExecutableSchema } from 'graphql-tools'
 
 import resolvers from './resolvers'
-import { typeDefs } from './schema'
+import typeDefs  from './schema'
 
 const schema = makeExecutableSchema({
   typeDefs,
@@ -13,9 +16,7 @@ const schema = makeExecutableSchema({
   }
 })
 
-const boundMiddleware = applyMiddleware(schema, graphqlShieldMiddleware)
-
 export const graphqlHTTP = koaGraphQL({
-  schema: boundMiddleware,
+  schema,
   graphiql: true
 })

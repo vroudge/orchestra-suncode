@@ -1,0 +1,71 @@
+type Query {
+	plot: String
+	entrypoint: Village
+	villageById(id: ID): Village
+	deviceById(id: ID): Device
+}
+
+type Mutation {
+	#	edit
+	nodeConfigUpdate(input: nodeConfigUpdateInput): Device
+}
+
+input nodeConfigUpdateInput {
+	extractionRecipe: Int
+	insertionRecipe: Int
+	deviceId: ID!
+}
+
+type Device {
+	id: ID!
+	name: String
+	type: String!
+	villageId: ID
+	legacy: Boolean
+	extractors: [Extractor]
+	inserters: [Inserter]
+	status: DeviceStatus
+	state: DeviceState
+}
+
+type Extractor {
+	extractionRecipe: Int
+	details: String
+}
+
+type Inserter {
+	insertionRecipe: Int
+	details: String
+}
+
+type DeviceState {
+	id: ID
+	available: Boolean
+	minOutput: String
+	maxOutput:String
+	currentCommand: String
+	currentOuput: String
+}
+
+type Village {
+	id: ID!
+	name: String
+	villageIds: [ID]
+	deviceConnection: [DeviceEdge]!
+	villageConnection: [VillageEdge]!
+}
+
+type DeviceEdge {
+	device: Device
+}
+
+type VillageEdge {
+	village: Village
+}
+
+enum DeviceStatus {
+	UNKNOWN
+	HEALTHY
+	UNHEALTHY
+	OFF
+}
