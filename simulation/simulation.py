@@ -1,99 +1,54 @@
-import pypsa
-import pandas as pd
-import numpy as np
-import logging
-import urllib.request
-import time
-import argparse
+import urllib3
 import json
-import os
-
-
-logging.basicConfig(
-    level=logging.DEBUG,
-    format='%(asctime)s.%(msecs)03d %(levelname)s:%(name)s:%(message)s',
-    datefmt='%Y-%m-%dT%H:%M:%SZ')
-
-logging.Formatter.converter = time.gmtime
-
-
-def create_and_save_network(network_path):
-    network = pypsa.Network()
-    num_bus = 3
-    num_lines = 3
-
-    for i in range(num_bus):
-        network.add("Bus", "bus_{}".format(i))
-
-    for i in range(num_lines):
-        network.add("Line",
-                    "line_{}".format(i),
-                    bus0="bus_{}".format(i),
-                    bus1="bus_{}".format((i + 1) % 3),
-                    x=0.0001,
-                    s_nom=60)
-
-    network.add("Generator", "gen_0",
-                bus="bus_0",
-                p_nom=100,
-                marginal_cost=50)
-
-    network.add("Generator", "gen_1",
-                bus="bus_1",
-                p_nom=100,
-                marginal_cost=25)
-
-    network.add("Load", "load",
-                bus="bus_2",
-                p_set=60)
-
-    network.export_to_csv_folder(network_path)
-
-
-class Grid():
-    def __init__(self, network_path="./network"):
-        self.network_path = network_path
-        if not os.path.isfile(self.network_path):
-            create_and_save_network(self.network_path)
-        self.network = self._load_network()
-
-    def _load_network(self):
-        network = pypsa.Network()
-        network.import_from_csv_folder(self.network_path)
-        return network
-
-    def update_network(self, new_loads):
-        # network.generators.at["Gas 0", "p_nom"] = 350
-
-    def run(self):
-        self.network.pf()
-
-    def plot(self):
-        pass
+from ders import DER
 
 
 class Simulation():
     def __init__(self):
-        # should have a list of the ders connected with ids
-        self.grid = Grid()
+        self.list_ders = []
+        num_ders = 10
+        for i in range(num_ders):
+            self.list_ders.append(DER(i))
+        self.total = 0
+        self.total_list = [100]*20
 
-    def get_stats(self):
-        # TBD
-        pass
-
-    def send_data(self, data):
-        url = 'http://127.0.0.1:8888/stats'
-        headers = {'content-type': 'application/json'}
-        req = urllib.request.Request(url,
-                                     'query {node {id}}', headers)
-        try:
-            with urllib.request.urlopen(req) as response:
-                data = json.loads(response.read())
-                self.grid.update_network(
-                    data.get('loads'))
-        except:
-            pass
+    def return_total_dict(self):
+        output_dict = {}
+        for i, output in enumerate(
+                self.total_list[len(self.total_list)-20:]):
+            output_dict[str(i)] = {"x": output, "y": output}
+        return output_dict
 
     def run_simulation(self):
-        data = self.grid.run()
-        self.send_data(data)
+        power = [10] * 30
+        power[10] = 10/9 + 10
+        available = [True] * 30
+        available[10] = False
+        for t in range(30):
+            total_list = 0
+            self.list_ders[0].step(available[t], power[t])
+            total_list += self.list_ders[0].current_output
+            for der in self.list_ders[1:]:
+                der.step(True, power[t])
+                total_list += der.current_output
+            self.total_list.append(total_list)
+            self.send_to_visu()
+
+    def send_to_visu(self):
+        data_dict = {}
+        for der in self.list_ders:
+            data_dict[str(der.id)] = der.return_output_dict()
+        data_dict['total'] = self.return_total_dict()
+        print(data_dict)
+        data_json = json.dumps(data_dict)
+
+        http = urllib3.PoolManager()
+
+        r = http.request('POST', 'http://ec2-54-245-75-78.us-west-2.compute.amazonaws.com:8088/plot',
+                         headers={'Content-Type': 'application/json'},
+                         body=data_json)
+
+
+if __name__ == "__main__":
+    simu = Simulation()
+    simu.run_simulation()
