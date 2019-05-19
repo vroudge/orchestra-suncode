@@ -70,8 +70,7 @@
         watchLoading (isLoading, countModifier) {
           // countModifier is either 1 or -1
           this.isLoading = isLoading
-        },
-        pollInterval: 20000
+        }
       },
       chart: {
         query: plot,
@@ -94,7 +93,7 @@
           // countModifier is either 1 or -1
           this.isLoading = isLoading
         },
-        pollInterval: 10000
+        pollInterval: 20000
       }
     },
     methods: {
