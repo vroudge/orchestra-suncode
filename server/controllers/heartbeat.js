@@ -12,6 +12,7 @@ export const heartbeatController = async ctx => {
     body.state = {
       currentCommand: body.state.current_command,
       maxOutput: body.state.max_output,
+      currentOutput: body.state.current_output,
       maxOutputDuration: body.state.max_output_duration,
       available: body.state.available
     }
