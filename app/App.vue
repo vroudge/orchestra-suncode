@@ -93,7 +93,7 @@
           // countModifier is either 1 or -1
           this.isLoading = isLoading
         },
-        pollInterval: 20000
+        pollInterval: 10000
       }
     },
     methods: {
